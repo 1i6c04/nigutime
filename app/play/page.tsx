@@ -30,7 +30,7 @@ export default function PlayPage() {
   }, [difficulty.playbackRate, setPlaybackRate])
 
   const handleHit = (id: string, x: number, y: number) => {
-    playHitSound('/audio/mokugyo-hit.mp3')
+    playHitSound('/audio/mokugyo-hit.wav')
     hitFish(id)
     setFloatingTexts(prev => [
       ...prev,
