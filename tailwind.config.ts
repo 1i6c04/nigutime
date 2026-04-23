@@ -35,7 +35,7 @@ const config: Config = {
       animation: {
         'float-up': 'float-up 0.8s ease-out forwards',
         'screen-shake': 'screen-shake 0.4s ease-in-out infinite',
-        'spin-bg': 'spin-bg 20s linear infinite',
+        'spin-bg': 'spin-bg var(--spin-duration, 20s) linear infinite',
       },
     },
   },
