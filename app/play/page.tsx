@@ -9,6 +9,7 @@ import { FloatingText } from '@/components/FloatingText'
 import { ScoreDisplay } from '@/components/ScoreDisplay'
 import { ShakeOverlay } from '@/components/ShakeOverlay'
 import { getRandomFloatingText } from '@/lib/floatingTexts'
+import { getRotationDuration } from '@/lib/rotation'
 
 type FloatingEntry = { id: string; text: string; x: number; y: number }
 
@@ -30,7 +31,7 @@ export default function PlayPage() {
   }, [difficulty.playbackRate, setPlaybackRate])
 
   const handleHit = (id: string, x: number, y: number) => {
-    playHitSound('/audio/mokugyo-hit.wav')
+    playHitSound('/audio/mokugyo-hit.mp3')
     hitFish(id)
     setFloatingTexts(prev => [
       ...prev,
@@ -48,6 +49,13 @@ export default function PlayPage() {
 
   return (
     <div className="relative w-full h-screen bg-temple-bg overflow-hidden select-none">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/background.png"
+        className="fixed inset-0 m-auto w-[90vmin] h-[90vmin] object-contain opacity-20 pointer-events-none animate-spin-bg"
+        style={{ animationDuration: `${getRotationDuration(score)}s` }}
+        alt=""
+      />
       <ShakeOverlay active={difficulty.playbackRate >= 2} />
 
       <div className="absolute top-4 right-4 z-10">
