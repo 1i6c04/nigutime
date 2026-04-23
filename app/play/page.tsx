@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useGameState } from '@/hooks/useGameState'
 import { useAudio } from '@/hooks/useAudio'
@@ -18,6 +18,37 @@ export default function PlayPage() {
   const { score, fish, difficulty, hitFish, expireFish, start, stop } = useGameState()
   const { play, stop: stopAudio, setPlaybackRate, playHitSound } = useAudio('/audio/dabei-zhou.mp3')
   const [floatingTexts, setFloatingTexts] = useState<FloatingEntry[]>([])
+
+  const bgRef = useRef<HTMLImageElement>(null)
+  const angleRef = useRef(0)
+  const lastTimeRef = useRef<number | null>(null)
+  const speedRef = useRef(360 / getRotationDuration(0))
+
+  // Update speed when difficulty tier changes — angle keeps accumulating
+  useEffect(() => {
+    speedRef.current = 360 / getRotationDuration(difficulty.minScore)
+  }, [difficulty.minScore])
+
+  // Drive rotation with rAF so speed changes never reset the angle
+  useEffect(() => {
+    let rafId: number
+    const tick = (timestamp: number) => {
+      if (lastTimeRef.current !== null) {
+        const delta = (timestamp - lastTimeRef.current) / 1000
+        angleRef.current = (angleRef.current + speedRef.current * delta) % 360
+        if (bgRef.current) {
+          bgRef.current.style.transform = `rotate(${angleRef.current}deg)`
+        }
+      }
+      lastTimeRef.current = timestamp
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(rafId)
+      lastTimeRef.current = null
+    }
+  }, [])
 
   useEffect(() => {
     start()
@@ -51,9 +82,9 @@ export default function PlayPage() {
     <div className="relative w-full h-screen bg-temple-bg overflow-hidden select-none">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={bgRef}
         src="/images/background.png"
-        className="fixed inset-0 m-auto w-[90vmin] h-[90vmin] object-contain opacity-20 pointer-events-none animate-spin-bg"
-        style={{ '--spin-duration': `${getRotationDuration(difficulty.minScore)}s` } as React.CSSProperties}
+        className="fixed inset-0 m-auto w-[90vmin] h-[90vmin] object-contain opacity-20 pointer-events-none"
         alt=""
       />
       <ShakeOverlay active={difficulty.playbackRate >= 2} />
