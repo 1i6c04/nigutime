@@ -27,10 +27,15 @@ const config: Config = {
           '60%': { transform: 'translateX(-4px)' },
           '80%': { transform: 'translateX(4px)' },
         },
+        'spin-bg': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       animation: {
         'float-up': 'float-up 0.8s ease-out forwards',
         'screen-shake': 'screen-shake 0.4s ease-in-out infinite',
+        'spin-bg': 'spin-bg 20s linear infinite',
       },
     },
   },
