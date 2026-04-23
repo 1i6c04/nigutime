@@ -53,7 +53,7 @@ export default function PlayPage() {
       <img
         src="/images/background.png"
         className="fixed inset-0 m-auto w-[90vmin] h-[90vmin] object-contain opacity-20 pointer-events-none animate-spin-bg"
-        style={{ '--spin-duration': `${getRotationDuration(score)}s` } as React.CSSProperties}
+        style={{ '--spin-duration': `${getRotationDuration(difficulty.minScore)}s` } as React.CSSProperties}
         alt=""
       />
       <ShakeOverlay active={difficulty.playbackRate >= 2} />
