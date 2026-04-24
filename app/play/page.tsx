@@ -15,19 +15,37 @@ type FloatingEntry = { id: string; text: string; x: number; y: number }
 
 export default function PlayPage() {
   const router = useRouter()
-  const { score, fish, difficulty, hitFish, expireFish, start, stop } = useGameState()
+  const [shakeActive, setShakeActive] = useState(false)
+  const { score, fish, difficulty, hitFish, expireFish, start, stop } = useGameState(shakeActive)
   const { play, stop: stopAudio, setPlaybackRate, playHitSound } = useAudio('/audio/dabei-zhou.mp3')
   const [floatingTexts, setFloatingTexts] = useState<FloatingEntry[]>([])
+
+  useEffect(() => {
+    let showTimer: ReturnType<typeof setTimeout>
+    let hideTimer: ReturnType<typeof setTimeout>
+    const schedule = () => {
+      showTimer = setTimeout(() => {
+        setShakeActive(true)
+        hideTimer = setTimeout(() => {
+          setShakeActive(false)
+          schedule()
+        }, 8000 + Math.random() * 7000)
+      }, 60000 + Math.random() * 60000)
+    }
+    schedule()
+    return () => { clearTimeout(showTimer); clearTimeout(hideTimer) }
+  }, [])
 
   const bgRef = useRef<HTMLImageElement>(null)
   const angleRef = useRef(0)
   const lastTimeRef = useRef<number | null>(null)
   const speedRef = useRef(360 / getRotationDuration(0))
 
-  // Update speed when difficulty tier changes — angle keeps accumulating
+  // Update speed when difficulty tier or boost changes — angle keeps accumulating
   useEffect(() => {
-    speedRef.current = 360 / getRotationDuration(difficulty.minScore)
-  }, [difficulty.minScore])
+    const base = 360 / getRotationDuration(difficulty.minScore)
+    speedRef.current = shakeActive ? base * 4 : base
+  }, [difficulty.minScore, shakeActive])
 
   // Drive rotation with rAF so speed changes never reset the angle
   useEffect(() => {
@@ -51,6 +69,10 @@ export default function PlayPage() {
   }, [])
 
   useEffect(() => {
+    if (!sessionStorage.getItem('nigutime_started')) {
+      router.replace('/')
+      return
+    }
     start()
     play()
     return () => stopAudio()
@@ -87,7 +109,7 @@ export default function PlayPage() {
         className="fixed inset-0 m-auto w-[90vmin] h-[90vmin] object-contain opacity-20 pointer-events-none"
         alt=""
       />
-      <ShakeOverlay active={difficulty.playbackRate >= 2} />
+      <ShakeOverlay active={shakeActive} />
 
       <div className="absolute top-4 right-4 z-10">
         <ScoreDisplay score={score} />

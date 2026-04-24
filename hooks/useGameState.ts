@@ -9,16 +9,30 @@ export type Fish = {
   y: number
 }
 
-export function useGameState() {
+export function useGameState(boostActive: boolean = false) {
   const [score, setScore] = useState(0)
   const [fish, setFish] = useState<Fish[]>([])
   const [isRunning, setIsRunning] = useState(false)
   const spawnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const scoreRef = useRef(0)
+  const boostRef = useRef(boostActive)
+
+  useEffect(() => { boostRef.current = boostActive }, [boostActive])
+
+  const applyBoost = useCallback((tier: DifficultyTier): DifficultyTier => {
+    if (!boostRef.current) return tier
+    return {
+      ...tier,
+      maxFish: Math.min(tier.maxFish + 3, 7),
+      minInterval: Math.round(tier.minInterval * 0.35),
+      maxInterval: Math.round(tier.maxInterval * 0.35),
+    }
+  }, [])
 
   const spawnFish = useCallback((tier: DifficultyTier) => {
+    const effective = applyBoost(tier)
     setFish(prev => {
-      if (prev.length >= tier.maxFish) return prev
+      if (prev.length >= effective.maxFish) return prev
       return [
         ...prev,
         {
@@ -28,17 +42,18 @@ export function useGameState() {
         },
       ]
     })
-  }, [])
+  }, [applyBoost])
 
   const scheduleNextSpawn = useCallback((tier: DifficultyTier) => {
+    const effective = applyBoost(tier)
     const interval =
-      tier.minInterval + Math.random() * (tier.maxInterval - tier.minInterval)
+      effective.minInterval + Math.random() * (effective.maxInterval - effective.minInterval)
     spawnTimerRef.current = setTimeout(() => {
       const currentTier = getDifficulty(scoreRef.current)
       spawnFish(currentTier)
       scheduleNextSpawn(currentTier)
     }, interval)
-  }, [spawnFish])
+  }, [spawnFish, applyBoost])
 
   useEffect(() => {
     if (!isRunning) return

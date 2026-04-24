@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 
 type Props = {
   id: string
@@ -39,16 +38,14 @@ export function MokugyoFish({ id, x, y, onHit, onExpire }: Props) {
       <button
         aria-label="木魚"
         onClick={handleClick}
-        className={`w-20 h-20 transition-all duration-150 select-none
+        className={`w-20 h-20 transition-all duration-150 select-none bg-transparent
           ${hit ? 'scale-125 opacity-0' : 'hover:scale-110 active:scale-95'}`}
       >
-        <Image
-          src="/images/mokugyo.svg"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/mokugyo.png"
           alt="木魚"
-          width={80}
-          height={80}
-          className={hit ? 'drop-shadow-[0_0_16px_gold]' : 'drop-shadow-md'}
-          priority
+          className={`w-full h-full object-contain ${hit ? 'drop-shadow-[0_0_16px_gold]' : 'drop-shadow-md'}`}
         />
       </button>
     </div>

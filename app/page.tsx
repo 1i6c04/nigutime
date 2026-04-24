@@ -25,7 +25,7 @@ function HomeContent() {
       <p className="text-yellow-600 text-sm mb-12">敲木魚，積功德，速速修行</p>
 
       <button
-        onClick={() => router.push('/play')}
+        onClick={() => { sessionStorage.setItem('nigutime_started', '1'); router.push('/play') }}
         className="bg-yellow-700 hover:bg-yellow-600 text-white font-bold
           text-xl px-10 py-4 rounded-2xl shadow-lg mb-4"
       >
