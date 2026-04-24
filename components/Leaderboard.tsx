@@ -32,12 +32,12 @@ export function Leaderboard({ isOpen, onClose, highlightId }: Props) {
         {loading ? (
           <p className="text-yellow-200 text-center">載入中...</p>
         ) : (
-          <table className="w-full text-yellow-100">
+          <table className="w-full text-yellow-100 table-fixed">
             <thead>
               <tr className="text-yellow-400 border-b border-yellow-800">
-                <th className="py-1 text-left w-8">名次</th>
-                <th className="py-1 text-left">法號</th>
-                <th className="py-1 text-right">功德值</th>
+                <th className="py-2 pr-3 text-left w-12 whitespace-nowrap">名次</th>
+                <th className="py-2 pr-3 text-left whitespace-nowrap">法號</th>
+                <th className="py-2 text-right whitespace-nowrap">功德值</th>
               </tr>
             </thead>
             <tbody>
@@ -48,8 +48,8 @@ export function Leaderboard({ isOpen, onClose, highlightId }: Props) {
                     s.id === highlightId ? 'bg-yellow-500/30 font-bold' : ''
                   }`}
                 >
-                  <td className="py-2">{i + 1}</td>
-                  <td className="py-2">{s.nickname}</td>
+                  <td className="py-2 pr-3">{i + 1}</td>
+                  <td className="py-2 pr-3 text-left break-all">{s.nickname}</td>
                   <td className="py-2 text-right">{s.score}</td>
                 </tr>
               ))}

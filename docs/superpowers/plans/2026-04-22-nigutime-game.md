@@ -1643,6 +1643,7 @@ git push -u origin main
 2. Add environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
 3. Click Deploy
 4. Expected: build passes, site is live at `*.vercel.app`
 
