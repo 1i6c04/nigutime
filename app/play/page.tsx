@@ -17,7 +17,7 @@ export default function PlayPage() {
   const router = useRouter()
   const [shakeActive, setShakeActive] = useState(false)
   const { score, fish, difficulty, hitFish, expireFish, start, stop } = useGameState(shakeActive)
-  const { play, stop: stopAudio, setPlaybackRate, playHitSound } = useAudio('/audio/dabei-zhou.mp3')
+  const { play, stop: stopAudio, setPlaybackRate, playHitSound } = useAudio('https://71tbtyaqu7j1xehz.public.blob.vercel-storage.com/dabei-zhou.mp3')
   const [floatingTexts, setFloatingTexts] = useState<FloatingEntry[]>([])
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function PlayPage() {
   }, [difficulty.playbackRate, setPlaybackRate])
 
   const handleHit = (id: string, x: number, y: number) => {
-    playHitSound('/audio/mokugyo-hit.mp3')
+    playHitSound('https://71tbtyaqu7j1xehz.public.blob.vercel-storage.com/mokugyo-hit.mp3')
     hitFish(id)
     setFloatingTexts(prev => [
       ...prev,
