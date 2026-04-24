@@ -10,6 +10,7 @@ import { ScoreDisplay } from '@/components/ScoreDisplay'
 import { ShakeOverlay } from '@/components/ShakeOverlay'
 import { getRandomFloatingText } from '@/lib/floatingTexts'
 import { getRotationDuration } from '@/lib/rotation'
+import { consumeGameStart } from '@/lib/gameSession'
 
 type FloatingEntry = { id: string; text: string; x: number; y: number }
 
@@ -68,8 +69,12 @@ export default function PlayPage() {
     }
   }, [])
 
+  const sessionValidRef = useRef(false)
+
   useEffect(() => {
-    if (!sessionStorage.getItem('nigutime_started')) {
+    const allowed = sessionValidRef.current || consumeGameStart()
+    sessionValidRef.current = true
+    if (!allowed) {
       router.replace('/')
       return
     }
