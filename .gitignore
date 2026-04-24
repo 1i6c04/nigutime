@@ -35,3 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .worktrees/
+
+# audio/video assets (use CDN or object storage instead)
+public/audio/
