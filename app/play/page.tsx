@@ -88,7 +88,7 @@ export default function PlayPage() {
     hitFish(id)
     setFloatingTexts(prev => [
       ...prev,
-      { id: crypto.randomUUID(), text: getRandomFloatingText(), x, y },
+      { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, text: getRandomFloatingText(), x, y },
     ])
   }
 
